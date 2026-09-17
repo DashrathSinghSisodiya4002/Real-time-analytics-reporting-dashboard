@@ -87,11 +87,8 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Activity Logs - Testing Criteria API
-                        .requestMatchers(
-                                "/api/activity-logs/**"
-                        ).permitAll()
-
-                        // Other APIs require authentication
+                        .requestMatchers("/api/activity-logs/**").permitAll()
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()
                 )
 
