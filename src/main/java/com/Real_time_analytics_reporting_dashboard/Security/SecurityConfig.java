@@ -36,7 +36,6 @@ public class SecurityConfig {
     // Password Encryption
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
@@ -64,11 +63,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
-        CorsConfiguration configuration =
-                new CorsConfiguration();
+        CorsConfiguration configuration = new CorsConfiguration();
 
+        // Local frontend + deployed Render frontend
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:5173"
+                "http://localhost:5173",
+                "https://real-time-analytics-dashboard-pqea.onrender.com"
         ));
 
         configuration.setAllowedMethods(List.of(
@@ -76,6 +76,7 @@ public class SecurityConfig {
                 "POST",
                 "PUT",
                 "DELETE",
+                "PATCH",
                 "OPTIONS"
         ));
 
@@ -101,7 +102,7 @@ public class SecurityConfig {
 
         http
 
-                // Disable CSRF
+                // Disable CSRF for REST API
                 .csrf(csrf -> csrf.disable())
 
                 // Enable CORS
@@ -109,7 +110,7 @@ public class SecurityConfig {
                         corsConfigurationSource()
                 ))
 
-                // JWT is Stateless
+                // JWT Stateless Session
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
@@ -145,7 +146,7 @@ public class SecurityConfig {
                         // Root
                         .requestMatchers("/").permitAll()
 
-                        // Other APIs require JWT
+                        // All other APIs require JWT
                         .anyRequest().authenticated()
                 )
 
